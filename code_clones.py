@@ -1,5 +1,6 @@
 import os
 
+
 def read_file(file_path: str) -> str:
     """
     Read the contents of a file.
@@ -11,8 +12,9 @@ def read_file(file_path: str) -> str:
     if not os.path.isfile(file_path):
         raise ValueError(f"{file_path} is not a file.")
 
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         return file.read()
+
 
 def compute_jaccard_similarity(a: str, b: str) -> float:
     """
@@ -26,26 +28,43 @@ def compute_jaccard_similarity(a: str, b: str) -> float:
     a_content = read_file(a).splitlines()
     b_content = read_file(b).splitlines()
 
-    # TODO: Implement the rest of this function
+    a_set = set(a_content)
+    b_set = set(b_content)
 
-    return 0
+    return len(set.intersection(a_set, b_set)) / len(set.union(a_set, b_set))
+
 
 def visualise_dot_plot(a: str, b: str) -> str:
     a_content = read_file(a).splitlines()
     b_content = read_file(b).splitlines()
 
-    plot = '-' * 80 + '\n'
+    plot = "-" * 80 + "\n"
     for i in range(len(a_content)):
-        plot += f'x{i}: {a_content[i]}\n'
-    plot += '-' * 80 + '\n'
+        plot += f"x{i}: {a_content[i]}\n"
+    plot += "-" * 80 + "\n"
     for j in range(len(b_content)):
-        plot += f'y{j}: {b_content[j]}\n'
-    plot += '-' * 80 + '\n'
+        plot += f"y{j}: {b_content[j]}\n"
+    plot += "-" * 80 + "\n"
+    
+    header = ""
+    for line_no in range(len(a_content)):
+        header += f"\tx{line_no}"
+    header += "\t"
 
-    # TODO: Implement the rest to return the dot plot for the two given programs (a: x-axis, b: y-axis)
+    plot += header + "\n"
 
-    # Below is a sample output:
-    '''
+    for index, line_y in enumerate(b_content):
+        row = f"y{index}"
+        for line_x in a_content:
+            if line_x == line_y:
+                row += "\t*"
+            else:
+                row += "\t "
+        row += "\t"
+
+        plot += row + "\n"
+
+    """
     --------------------------------------------------------------------------------
     x0: def calculate_total(values: list):
     x1:     total = 0
@@ -74,9 +93,8 @@ def visualise_dot_plot(a: str, b: str) -> str:
     y6	 	 	 	 	 	*	 	
     y7	 	 	 	 	 	 	*	
     --------------------------------------------------------------------------------
-    '''
-
-    plot += '\t'
-    plot += '-' * 80
+    """
+    
+    plot += "-" * 80
 
     return plot.strip()
